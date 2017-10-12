@@ -43,9 +43,9 @@ public class DeliveryJersey {
 	
 	@GET
 	@Produces({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
-	@Path("{id}")
-	public Response getItem(@PathParam("id") Long id){
-		DeliveryEntity item = DeliveryDAO.getInstance().getItemById(id);
+	@Path("/{requestId}")
+	public Response getItem(@PathParam("requestId") String requestId){
+		DeliveryEntity item = DeliveryDAO.getInstance().getItemByRequestId(requestId);
 		
 		if(item == null)
 		{

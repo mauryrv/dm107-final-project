@@ -10,7 +10,7 @@ public class DeliveryDAO {
 
 	
 	private static DeliveryDAO delivery = null;
-	private Long id = 0L;
+	Connection con;
 	
 	public static DeliveryDAO getInstance() {
 		if (delivery == null) {
@@ -20,12 +20,11 @@ public class DeliveryDAO {
 	}
 	
 	public DeliveryDAO() {
-		Connection con = new Connection();
-       // pegar novo id da nova entrega!! pega max no banco
-		id = con.getNextDeliveryId();
+		con = new Connection();
+       // pegar novo id da nova entrega!! pega max no banco		
 	}
 	
-	public List getItems() {
+	public List<DeliveryEntity> getItems() {
 		Connection con = new Connection();
 		// pegar todas entregas cadastradas no banco de dados
 		ArrayList<DeliveryEntity> items = con.listDeliveries();
@@ -33,9 +32,9 @@ public class DeliveryDAO {
 		return items;
 	}
 	
-	public DeliveryEntity getItemById(Long id) {
+	public DeliveryEntity getItemByRequestId(String requestNumber) {
 		Connection con = new Connection();
-		DeliveryEntity item = con.getDelivery(id);
+		DeliveryEntity item = con.getDelivery(requestNumber);
 		//pegar item no banco de dados pelo id da entrega!
 		return item;
 	}
@@ -43,6 +42,7 @@ public class DeliveryDAO {
 	public DeliveryEntity createItem(DeliveryEntity entity) {
 		
 		//criar item no banco de dados
+		long id = con.getNextDeliveryId();
 		entity.setId(id);
 		Connection con = new Connection();
 		int add = con.createDelivery(entity);

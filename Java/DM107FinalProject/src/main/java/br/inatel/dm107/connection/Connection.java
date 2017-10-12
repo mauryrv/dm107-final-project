@@ -1,10 +1,9 @@
 package br.inatel.dm107.connection;
 
-//import java.sql.Connection;
+
 import java.sql.DriverManager;
 import java.sql.SQLException;
 //import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -81,15 +80,14 @@ public class Connection {
 		
 	}
 
-	
 	public ArrayList<DeliveryEntity> listDeliveries()
 	{
-		//TERMINAR CLASSEEEE!!!!
+		
 		ArrayList<DeliveryEntity> deliveries = new ArrayList<>();
 		DeliveryEntity item;
 
-		String sql ="Select cliente.id as pf_id, nome, endereco, telefone,cpf,identidade,tipo_identidade"
-				+ " from cliente join pessoa_fisica pf on cliente.id = pf.id order by cliente.id";
+		String sql ="Select id,request_number,customer_id,receiver_name,receiver_cpf,delivery_date"
+				+ " from delivery order by id";
 		
 		try( 	Statement sttm = connection.createStatement();
 				ResultSet  rs = sttm.executeQuery(sql);)
@@ -97,9 +95,12 @@ public class Connection {
 
 			while(rs.next()){
 				item = new DeliveryEntity();
-				/*rs.getInt("pf_id"),rs.getString("nome"),rs.getString("endereco"),rs.getString("telefone")
-				,rs.getString("cpf"),rs.getString("identidade"),rs.getString("tipo_identidade")*/
-				
+				item.setId(rs.getLong("id"));
+				item.setIdRequest(rs.getString("request_number"));
+				item.setIdCustomer(rs.getString("customer_id"));
+				item.setReceiverName(rs.getString("receiver_name"));
+				item.setReceiverCPF(rs.getString("receiver_cpf"));
+				item.setDeliveryDate(rs.getDate("delivery_date"));
 				deliveries.add(item);
 				
 			}
@@ -113,14 +114,14 @@ public class Connection {
 		return deliveries;
 	}
 
-
-	public DeliveryEntity getDelivery(long id)
+	public DeliveryEntity getDelivery(String request_number)
 	{
 		
 		DeliveryEntity delivery = null;
 
-		String sql ="Select cliente.id as p_id, nome, endereco, telefone from cliente where id="+id;
-				
+		String sql ="Select id,request_number,customer_id,receiver_name,receiver_cpf,delivery_date"
+				+ " from delivery where request_number='"+request_number+"'";
+
 		
 		try( 	Statement sttm = connection.createStatement();
 				ResultSet  rs = sttm.executeQuery(sql);)
@@ -129,12 +130,12 @@ public class Connection {
 			while(rs.next()){
 				
 				delivery = new DeliveryEntity();
-				
-			/*rs.getInt("p_id"),
-				rs.getString("nome"),
-				rs.getString("endereco"),rs.getString("telefone"));*/
-				
-			
+				delivery.setId(rs.getLong("id"));
+				delivery.setIdRequest(rs.getString("request_number"));
+				delivery.setIdCustomer(rs.getString("customer_id"));
+				delivery.setReceiverName(rs.getString("receiver_name"));
+				delivery.setReceiverCPF(rs.getString("receiver_cpf"));
+				delivery.setDeliveryDate(rs.getDate("delivery_date"));
 
 			}
 			
@@ -151,18 +152,16 @@ public class Connection {
 	public int createDelivery(DeliveryEntity entity)
 	{
 		
-		
 		int result =0;
 
-		String sql ="insert into atendimento(id,id_cliente,data,descricao) "
-				+"values(?,?,?,?)";
+		String sql ="insert into delivery(id,request_number,customer_id) "
+				+"values(?,?,?)";
 		try(PreparedStatement psstm = connection.prepareStatement(sql))	{
-			/*java.sql.Date newDt = new java.sql.Date (atendimento.getData().getTime());
-			psstm.setInt(1, id);
-			psstm.setInt(2, atendimento.getCliente().getId());
-			psstm.setDate(3, newDt);
-			psstm.setString(4, atendimento.getDescricao());*/
 			
+			psstm.setLong(1, entity.getId());
+			psstm.setString(2, entity.getIdRequest());
+			psstm.setString(3, entity.getIdCustomer());
+
 			result = psstm.executeUpdate();
 		
 			
@@ -170,8 +169,7 @@ public class Connection {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-	
-		
+
 		return result;
 
 	}

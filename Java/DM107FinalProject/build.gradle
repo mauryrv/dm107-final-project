@@ -11,11 +11,12 @@ repositories {
 gretty {
 	httpPort = 8088
 }
-s
+
 dependencies {
 	//dependencies scope provide
 	providedCompile "javax.servlet:javax.servlet-api:3.1.0" 
 	
+	compile group: 'org.postgresql', name: 'postgresql', version: '9.3-1100-jdbc4'
 	compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.43'
 	compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0.1'
 	compile group: 'org.glassfish.jersey.core', name: 'jersey-server', version: '2.25'
