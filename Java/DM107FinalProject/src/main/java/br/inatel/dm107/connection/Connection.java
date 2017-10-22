@@ -3,7 +3,7 @@ package br.inatel.dm107.connection;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
-//import java.sql.Connection;
+
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,7 +19,8 @@ public class Connection {
 	java.sql.Connection connection;
 	static{
 		try {
-			Class.forName("org.postgresql.Driver");
+			Class.forName("com.mysql.jdbc.Driver");
+			//Class.forName("org.postgresql.Driver");
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -30,9 +31,12 @@ public class Connection {
 	
 	public Connection()
 	{
-		String url = "jdbc:postgresql://localhost:5432/TrabalhoDM107";
-		String username="postgres";
-		String password="admin";
+		//String url = "jdbc:postgresql://localhost:5432/TrabalhoDM107";
+		String url = "jdbc:mysql://localhost/TrabalhoDM107";
+		String username="root";
+		String password="root";
+		//String username="postgres";
+		//String password="admin";
 		
 		try {
 			connection = DriverManager.getConnection(url,username,password);
@@ -58,15 +62,15 @@ public class Connection {
 	
 	public long getNextDeliveryId()
 	{
-		int id=0;
-		String sql ="select nextval('sqce_delivery') as nextid";
+		long id=0;
+		String sql ="select max(id)+1 as nextid from delivery";
 		
 		try( 	Statement sttm = connection.createStatement();
 				ResultSet  rs = sttm.executeQuery(sql);)
 		{
 
 			while(rs.next()){
-				id = rs.getInt("nextid");
+				id = rs.getLong("nextid");
 
 			}
 			
@@ -154,13 +158,13 @@ public class Connection {
 		
 		int result =0;
 
-		String sql ="insert into delivery(id,request_number,customer_id) "
-				+"values(?,?,?)";
+		String sql ="insert into delivery(request_number,customer_id) "
+				+"values(?,?)";
 		try(PreparedStatement psstm = connection.prepareStatement(sql))	{
 			
-			psstm.setLong(1, entity.getId());
-			psstm.setString(2, entity.getIdRequest());
-			psstm.setString(3, entity.getIdCustomer());
+			//psstm.setLong(1, entity.getId());
+			psstm.setString(1, entity.getIdRequest());
+			psstm.setString(2, entity.getIdCustomer());
 
 			result = psstm.executeUpdate();
 		
@@ -172,5 +176,34 @@ public class Connection {
 
 		return result;
 
+	}
+
+	public boolean checkLogin(String userName, String passWord)
+	{
+		int cnt=0;
+		boolean exists = false;
+		String sql ="select count(*) as CNT from dm107users where"
+				+ " user_name='"+userName+"' and password='"+passWord+"'";
+		
+		try( 	Statement sttm = connection.createStatement();
+				ResultSet  rs = sttm.executeQuery(sql);)
+		{
+
+			while(rs.next()){
+				cnt = rs.getInt("CNT");
+
+			}
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(cnt>0){
+			exists= true;
+		}
+		
+		return exists;
 	}
 }

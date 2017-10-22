@@ -21,7 +21,7 @@ public class DeliveryDAO {
 	
 	public DeliveryDAO() {
 		con = new Connection();
-       // pegar novo id da nova entrega!! pega max no banco		
+       	
 	}
 	
 	public List<DeliveryEntity> getItems() {
