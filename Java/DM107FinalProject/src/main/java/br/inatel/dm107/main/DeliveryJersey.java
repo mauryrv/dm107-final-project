@@ -31,7 +31,7 @@ public class DeliveryJersey {
 	
 	@GET
 	@Produces({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
-	public Response helloJersey(){
+	public Response getDeliveries(){
 		List<DeliveryEntity>items = DeliveryDAO.getInstance().getItems();
 		GenericEntity entity = new GenericEntity<List<DeliveryEntity>>(items){};
 		

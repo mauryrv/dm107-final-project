@@ -20,6 +20,7 @@ public class Connection {
 	static{
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
+			//Class.forName("org.postgresql.Driver");
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -30,10 +31,12 @@ public class Connection {
 	
 	public Connection()
 	{
-		
+		//String url = "jdbc:postgresql://localhost:5432/TrabalhoDM107";
 		String url = "jdbc:mysql://localhost/TrabalhoDM107";
 		String username="root";
 		String password="root";
+		//String username="postgres";
+		//String password="admin";
 		
 		try {
 			connection = DriverManager.getConnection(url,username,password);

@@ -6,9 +6,9 @@ use \Psr\Http\Message\ResponseInterface as Response;
 require 'config.php';
 
 //get delivery - used for test
-$app->get('/api/delivery/{nome}', function (Request $request, Response $response) {
-        $nome = $request->getAttribute('nome');
-        $entrega = $this->db->delivery("id=?",$nome)->fetch();
+$app->get('/api/delivery/{id}', function (Request $request, Response $response) {
+        $idTeste = $request->getAttribute('id');
+        $entrega = $this->db->delivery("id=?",$idTeste)->fetch();
         
         if(empty($entrega)){
             return $response->withJson("{Status:Delivery not found}", 404);
